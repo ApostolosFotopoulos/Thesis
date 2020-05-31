@@ -126,7 +126,7 @@ public class ExecuteQueries {
         Boolean findBestAuthorForArticle        = true; /*Finds the the most relevant authors to the set of keywords. searchBySetOfKeywords needs to be enabled
                                                           for this to work because it uses the list of the most relevant publications to the set of keywords.*/ 
          
-        final int ARRAY_LENGTH = 100;    /*The length of the lists that contain the most relevant articles,authors,journals to the set of keywords.
+        final int ARRAY_LENGTH = 1000;    /*The length of the lists that contain the most relevant articles,authors,journals to the set of keywords.
                                             The bigger the length the better the precision of the results.*/
         final int NUMBER_OF_RESULTS = 10;  //The ammount of results printed in most of the above queries.
         final int MIN_KEYWORD_LENGTH  = 5;     //The minimum length of a keyword. Used by all the queries that use keywords.

@@ -44,7 +44,7 @@ public class CreateDatabase {
         Boolean insertMasterstheses = true;  //Inserts master's theses.
         
         Boolean findMostUsedKeywords   = true;  //Finds the most used keywords by searching the titles that were inserted in the database.
-        final int KEYWORD_ARRAY_LENGTH = 3; //The ammount of keywords that will be added in the database.
+        final int KEYWORD_ARRAY_LENGTH = 200; //The ammount of keywords that will be added in the database.
         final int MIN_KEYWORD_LENGTH   = 5;     //The minimum length of a keyword that will ne added in the database.
                 
         try {
