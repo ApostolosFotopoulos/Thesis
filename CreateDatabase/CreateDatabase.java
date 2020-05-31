@@ -62,11 +62,9 @@ public class CreateDatabase {
             }
             
             if (insertXml) {
-                int k=-10;
-                File fXmlFile = new File("dblp xmls/dblptest3.xml");
-                //int k=0;
-                //File fXmlFile = new File("dblp xmls/dblp"+k+".xml");
-                //Insert xmls in the database starting from dblp0.xml (if k equals 0) and continuing with dblp1.xml, dblp2xml etc.
+                int k=0;
+                File fXmlFile = new File("dblp xmls/dblp"+k+".xml");
+                //Insert xmls in the database starting from dblp0.xml (if k equals 0) and continuing with dblp1.xml, dblp2.xml etc.
                 while(fXmlFile.exists()) {
                     System.out.println("Inserting "+fXmlFile.getName());
                     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -668,13 +666,7 @@ public class CreateDatabase {
                     mostUsedKeywords.add(i,new KeywordRating());
                 }
                 
-                int s=1;
-                while (rs.next()) {
-                    if (s%1000==0) {
-                        System.out.println(s);
-                    }
-                    s++;
-                    
+                while (rs.next()) {  
                     String title = rs.getString("a.title").trim();
                     String[] keywords = title.split(" ");
                     
@@ -722,5 +714,6 @@ public class CreateDatabase {
         } catch (IOException | ParserConfigurationException | DOMException | SAXException e) {
             e.printStackTrace(System.out);
         }
+        conn.close();
     } 
 }
