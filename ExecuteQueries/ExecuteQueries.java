@@ -1220,5 +1220,6 @@ public class ExecuteQueries {
                 System.out.println();
             }
         }
+        conn.close();
     }
 }
