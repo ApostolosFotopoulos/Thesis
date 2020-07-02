@@ -62,11 +62,8 @@ public class CreateDatabase {
             }
             
             if (insertXml) {
-                int k=-100;
-                //File fXmlFile = new File("dblp xmls/dblp0.xml");
-                File fXmlFile = new File("dblp xmls/dblptest0.xml");
-                //int k=0;
-                //File fXmlFile = new File("dblp xmls/dblp"+k+".xml");
+                int k=0;
+                File fXmlFile = new File("dblp xmls/dblp"+k+".xml");
                 //Insert xmls in the database starting from dblp0.xml (if k equals 0) and continuing with dblp1.xml, dblp2.xml etc.
                 while(fXmlFile.exists()) {
                     System.out.println("Inserting "+fXmlFile.getName());
