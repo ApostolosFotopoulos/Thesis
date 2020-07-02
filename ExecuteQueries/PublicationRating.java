@@ -36,7 +36,7 @@ public class PublicationRating implements Comparable<PublicationRating> {
     public String toString( ) {
         String tTitle = this.title;
         int tTitleLength = tTitle.length();
-        for (int j=0; j<100-tTitleLength; j++) { 
+        for (int j=0; j<120-tTitleLength; j++) { 
             tTitle=tTitle.concat(" ");
         }
         

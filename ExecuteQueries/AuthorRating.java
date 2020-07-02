@@ -34,13 +34,13 @@ public class AuthorRating implements Comparable<AuthorRating> {
         String tName = this.name;
         tName = tName.replaceAll("[0123456789]", "");
         int tNameLength = tName.length();
-        for (int j=0; j<30-tNameLength; j++) { 
+        for (int j=0; j<40-tNameLength; j++) { 
             tName=tName.concat(" ");
         }
         
         String tRating = String.valueOf(this.rating);
         int tRatingLength = tRating.length();
-        for (int j=0; j<30-tRatingLength; j++) { 
+        for (int j=0; j<40-tRatingLength; j++) { 
             tRating=tRating.concat(" ");
         }
         

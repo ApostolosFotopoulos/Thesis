@@ -64,7 +64,7 @@ public class Inflector {
         irregular("person", "people");
         irregular("child", "children");
         irregular("sex", "sexes");
-        uncountable(new String[] {"equipment", "data", "development", "information", "rice", "money", "species", "series", "fish", "sheep"});
+        uncountable(new String[] {"data", "analysis", "information", "rice", "money", "species", "series", "fish", "sheep"});
     }
     
     public static Inflector getInstance() {
@@ -89,7 +89,7 @@ public class Inflector {
     }
     
     public String singularize(String word) {
-        if (uncountables.contains(word.toLowerCase())) {
+        if (uncountables.contains(word.toLowerCase()) || word.endsWith("ss") || word.endsWith("ment")) {
             return word;
         }
         return replaceWithFirstRule(word, singulars);
