@@ -32,7 +32,7 @@ public class CreateDatabase {
         ResultSet rs;
         Inflector inf = new Inflector();
         
-        Boolean clearDatabase = true;  //Clears the database before inserting new data.
+        Boolean clearDatabase = false;  //Clears the database before inserting new data.
         
         Boolean insertXml           = true;  //Inserts data from xml files.
         Boolean insertArticles      = true;  //Inserts articles.
@@ -62,8 +62,11 @@ public class CreateDatabase {
             }
             
             if (insertXml) {
-                int k=0;
-                File fXmlFile = new File("dblp xmls/dblp"+k+".xml");
+                int k=-100;
+                //File fXmlFile = new File("dblp xmls/dblp0.xml");
+                File fXmlFile = new File("dblp xmls/dblptest0.xml");
+                //int k=0;
+                //File fXmlFile = new File("dblp xmls/dblp"+k+".xml");
                 //Insert xmls in the database starting from dblp0.xml (if k equals 0) and continuing with dblp1.xml, dblp2.xml etc.
                 while(fXmlFile.exists()) {
                     System.out.println("Inserting "+fXmlFile.getName());
@@ -86,10 +89,12 @@ public class CreateDatabase {
                                 String title = eElement.getElementsByTagName("title").item(0).getTextContent();
                                 String year = eElement.getElementsByTagName("year").item(0).getTextContent();
                                 String journal = eElement.getElementsByTagName("journal").item(0).getTextContent();
+                                journal = journal.replaceAll("[\\\\'/%$\"]", "");
                                 
                                 String publisher = "-";
                                 if (eElement.getElementsByTagName("publisher").getLength()>0) {
                                     publisher = eElement.getElementsByTagName("publisher").item(0).getTextContent();
+                                    publisher = publisher.replaceAll("[\\\\'/%$\"]", "");
                                 }
                                 
                                 String month = "-";
@@ -320,7 +325,12 @@ public class CreateDatabase {
                                 String key = eElement.getAttribute("key");
                                 String title = eElement.getElementsByTagName("title").item(0).getTextContent();
                                 String year = eElement.getElementsByTagName("year").item(0).getTextContent();
-                                String publisher = eElement.getElementsByTagName("publisher").item(0).getTextContent();
+                                
+                                String publisher = "-";
+                                if (eElement.getElementsByTagName("publisher").getLength()>0) {
+                                    publisher = eElement.getElementsByTagName("publisher").item(0).getTextContent();
+                                    publisher = publisher.replaceAll("[\\\\'/%$\"]", "");
+                                }
                                 
                                 String month = "-";
                                 if (eElement.getElementsByTagName("month").getLength()>0) {
@@ -370,11 +380,13 @@ public class CreateDatabase {
                                 }
                                 
                                 //Insert the publisher of the book in the database.
-                                rs = selectQuery(conn,"match (n:publisher {name:'"+publisher+"'}) return n.name");                          
-                                if (!rs.next()) {
-                                    editQuery(conn,"create (n:publisher {name:'"+publisher+"'})");
+                                if (!publisher.equals("-")) {
+                                    rs = selectQuery(conn,"match (n:publisher {name:'"+publisher+"'}) return n.name");                          
+                                    if (!rs.next()) {
+                                        editQuery(conn,"create (n:publisher {name:'"+publisher+"'})");
+                                    }
+                                    editQuery(conn,"match (a:publisher {name:'"+publisher+"'}), (b:book {key:'"+key+"'}) merge (a)-[r:PUBLISHED]->(b)");
                                 }
-                                editQuery(conn,"match (a:publisher {name:'"+publisher+"'}), (b:book {key:'"+key+"'}) merge (a)-[r:PUBLISHED]->(b)");
                                 
                                 //All the properties below are only added if they exist.
                                 //Adds the month property to the node.
@@ -421,7 +433,12 @@ public class CreateDatabase {
                                 String key = eElement.getAttribute("key");
                                 String title = eElement.getElementsByTagName("title").item(0).getTextContent();
                                 String year = eElement.getElementsByTagName("year").item(0).getTextContent();
-                                String publisher = eElement.getElementsByTagName("publisher").item(0).getTextContent();
+                                
+                                String publisher = "-";
+                                if (eElement.getElementsByTagName("publisher").getLength()>0) {
+                                    publisher = eElement.getElementsByTagName("publisher").item(0).getTextContent();
+                                    publisher = publisher.replaceAll("[\\\\'/%$\"]", "");
+                                }
                                     
                                 String month = "-";
                                 if (eElement.getElementsByTagName("month").getLength()>0) {
@@ -471,11 +488,13 @@ public class CreateDatabase {
                                 }
                                 
                                 //Insert the publisher of the proceedings in the database.
-                                rs = selectQuery(conn,"match (n:publisher {name:'"+publisher+"'}) return n.name");                          
-                                if (!rs.next()) {
-                                    editQuery(conn,"create (n:publisher {name:'"+publisher+"'})");
+                                if (!publisher.equals("-")) {
+                                    rs = selectQuery(conn,"match (n:publisher {name:'"+publisher+"'}) return n.name");                          
+                                    if (!rs.next()) {
+                                        editQuery(conn,"create (n:publisher {name:'"+publisher+"'})");
+                                    }
+                                    editQuery(conn,"match (a:publisher {name:'"+publisher+"'}), (b:proceedings {key:'"+key+"'}) merge (a)-[r:PUBLISHED]->(b)");
                                 }
-                                editQuery(conn,"match (a:publisher {name:'"+publisher+"'}), (b:proceedings {key:'"+key+"'}) merge (a)-[r:PUBLISHED]->(b)");
                                 
                                 //All the properties below are only added if they exist.
                                 //Adds the month property to the node.
@@ -526,6 +545,7 @@ public class CreateDatabase {
                                 String publisher = "-";
                                 if (eElement.getElementsByTagName("publisher").getLength()>0) {
                                     publisher = eElement.getElementsByTagName("publisher").item(0).getTextContent();
+                                    publisher = publisher.replaceAll("[\\\\'/%$\"]", "");
                                 }
                                 
                                 String month = "-";
@@ -666,13 +686,13 @@ public class CreateDatabase {
                     mostUsedKeywords.add(i,new KeywordRating());
                 }
                 
-                while (rs.next()) {  
+                while (rs.next()) {
                     String title = rs.getString("a.title").trim();
                     String[] keywords = title.split(" ");
                     
                     //Changes all the keywords to lower case and singular form. Also removes .,: characters that may be at the end of a keyword.
                     for (int i=0; i<keywords.length; i++) {
-                        keywords[i] = keywords[i].replaceAll("[.,:]", "");
+                        keywords[i] = keywords[i].replaceAll("[.,:()]", "");
                         keywords[i] = keywords[i].toLowerCase();
                         keywords[i] = inf.singularize(keywords[i]);
                     }
@@ -707,7 +727,7 @@ public class CreateDatabase {
                     String keyword = mostUsedKeywords.get(i).getKeyword();
                     if (!keyword.equals("-")) {
                         int timesFound = mostUsedKeywords.get(i).getTimesFound();   
-                        editQuery(conn,"create (n:keyword {keyword:'"+keyword+"', timesFound:'"+timesFound+"'})");
+                        editQuery(conn,"create (n:keyword {keyword:'"+keyword+"', timesFound:"+timesFound+"})");
                     }
                 }
             }
